@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"os"
 )
 
 func main() {
@@ -10,30 +11,41 @@ func main() {
 	// var expenses float64
 	// var taxRate float64
 
-	revenue, err1 := getUserInput("Revenue: ")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-
-	expenses, err2 := getUserInput("Expenses: ")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-
-	taxRate, err3 := getUserInput("TaxRate: ")
-
-	if err1 != nil || err2 != nil || err3 != nil {
-		fmt.Println(err1)
+	revenue, err := getUserInput("Revenue: ")
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
+
+	expenses, err := getUserInput("Expenses: ")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	taxRate, err := getUserInput("TaxRate: ")
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// if err1 != nil || err2 != nil || err3 != nil {
+	// 	fmt.Println(err1)
+	// 	return
+	// }
 
 	ebt, profit, ratio := calculatFinancials(revenue, expenses, taxRate)
 
 	fmt.Printf("%.1f\n", ebt)
 	fmt.Printf("%.1f\n", profit)
 	fmt.Printf("%.1f\n", ratio)
+	storeResults(ebt, profit, ratio)
+}
+func storeResults(ebt, profit, ratio float64) {
+	results := fmt.Sprintf("EBT: %1.F\nProfit: %.1f\nRatio: %.3f\n", ebt, profit, ratio)
+	os.WriteFile("results.txt", []byte(results), 0644)
+
 }
 
 func calculatFinancials(revenue, expenses, taxRate float64) (float64, float64, float64) {
